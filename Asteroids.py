@@ -1,4 +1,3 @@
-from turtle import width
 import pygame
 from pygame.constants import (QUIT, K_LEFT, K_RIGHT, K_UP, K_ESCAPE, KEYDOWN)
 import os
