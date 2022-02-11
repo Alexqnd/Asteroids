@@ -22,6 +22,18 @@ class Settings(object):
     def imagepath(name):
         return os.path.join(Settings.path['image'], name)
 
+class Spaceship(pygame.sprite.Sprite):
+    def __init__(self) -> None:
+        super().__init__()
+        self.width = 60
+        self.height = 60
+        self.image = pygame.image.load(Settings.imagepath("spaceship0.png")).convert()
+        self.image = pygame.transform.scale(self.image, (self.width, self.height)).convert()
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = self.image.get_rect()
+        self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2)
+        pass
+
 class Game(object):
     def __init__(self):
         super().__init__()
@@ -30,6 +42,7 @@ class Game(object):
         self.screen = pygame.display.set_mode(Settings.dim())
         pygame.display.set_caption(Settings.title)
         self.clock = pygame.time.Clock()
+        self.spaceship = pygame.sprite.GroupSingle(Spaceship())
         self.running = False
 
     def run(self) -> None:
@@ -50,6 +63,7 @@ class Game(object):
 
     def draw(self) -> None:
         self.screen.fill((0, 0, 50))
+        self.spaceship.draw(self.screen)
         pygame.display.flip()
 
 if __name__ == '__main__':
