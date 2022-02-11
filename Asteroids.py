@@ -1,6 +1,7 @@
 import pygame
-from pygame.constants import (QUIT,K_SPACE, K_LEFT, K_RIGHT, K_ESCAPE, KEYDOWN)
+from pygame.constants import (QUIT, K_LEFT, K_RIGHT, K_UP, K_ESCAPE, KEYDOWN)
 import os
+import math
 
 class Settings(object):
     window = {'width': 800, 'height':500}
@@ -35,12 +36,18 @@ class Spaceship(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2)
         self.center_original = self.rect.center
-    
+
     def rotate_left(self):
         self.angle += 22.5
         if self.angle >= 360:
             self.angle -= 360
-        print(self.angle)
+        self.image = pygame.transform.rotate(self.image_template, self.angle)
+        self.rect = self.image.get_rect(center=self.rect.center)
+    
+    def rotate_right(self):
+        self.angle -= 22.5
+        if self.angle < 0:
+            self.angle += 360
         self.image = pygame.transform.rotate(self.image_template, self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
 
@@ -72,6 +79,8 @@ class Game(object):
                     self.running = False
                 elif event.key == K_LEFT:
                     self.spaceship.sprite.rotate_left()
+                elif event.key == K_RIGHT:
+                    self.spaceship.sprite.rotate_right()
 
     def draw(self) -> None:
         self.screen.fill((0, 0, 50))
