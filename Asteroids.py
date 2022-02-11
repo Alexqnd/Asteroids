@@ -38,6 +38,9 @@ class Spaceship(pygame.sprite.Sprite):
     
     def rotate_left(self):
         self.angle += 22.5
+        if self.angle >= 360:
+            self.angle -= 360
+        print(self.angle)
         self.image = pygame.transform.rotate(self.image_template, self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
 
