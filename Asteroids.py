@@ -27,12 +27,19 @@ class Spaceship(pygame.sprite.Sprite):
         super().__init__()
         self.width = 60
         self.height = 60
+        self.angle = 0
         self.image = pygame.image.load(Settings.imagepath("spaceship0.png")).convert()
-        self.image = pygame.transform.scale(self.image, (self.width, self.height)).convert()
+        self.image_template = pygame.transform.scale(self.image, (self.width, self.height)).convert()
+        self.image = self.image_template
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
         self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2)
-        pass
+        self.center_original = self.rect.center
+    
+    def rotate_left(self):
+        self.angle += 22.5
+        self.image = pygame.transform.rotate(self.image_template, self.angle)
+        self.rect = self.image.get_rect(center=self.rect.center)
 
 class Game(object):
     def __init__(self):
@@ -60,6 +67,8 @@ class Game(object):
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     self.running = False
+                elif event.key == K_LEFT:
+                    self.spaceship.sprite.rotate_left()
 
     def draw(self) -> None:
         self.screen.fill((0, 0, 50))
