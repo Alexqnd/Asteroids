@@ -36,6 +36,10 @@ class Spaceship(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2)
         self.center_original = self.rect.center
+        self.direction = (0, 0)
+
+    def update(self,) -> None:
+        self.rect.move_ip(self.direction)
 
     def rotate_left(self):
         self.angle += 22.5
@@ -50,6 +54,9 @@ class Spaceship(pygame.sprite.Sprite):
             self.angle += 360
         self.image = pygame.transform.rotate(self.image_template, self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
+
+    def accelerate(self):
+        self.direction = (round(self.direction[0] - math.sin(math.radians(self.angle))), round(self.direction[1] - math.cos(math.radians(self.angle))))
 
 class Game(object):
     def __init__(self):
@@ -66,6 +73,7 @@ class Game(object):
         self.running = True
         while self.running:
             self.clock.tick(Settings.fps)
+            self.update()
             self.watch_for_events()
             self.draw()
         pygame.quit()
@@ -81,6 +89,11 @@ class Game(object):
                     self.spaceship.sprite.rotate_left()
                 elif event.key == K_RIGHT:
                     self.spaceship.sprite.rotate_right()
+                elif event.key == K_UP:
+                    self.spaceship.sprite.accelerate()
+
+    def update(self) -> None:
+        self.spaceship.sprite.update()
 
     def draw(self) -> None:
         self.screen.fill((0, 0, 50))
