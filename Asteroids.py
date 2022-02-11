@@ -56,7 +56,13 @@ class Spaceship(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def accelerate(self):
-        self.direction = (round(self.direction[0] - math.sin(math.radians(self.angle))), round(self.direction[1] - math.cos(math.radians(self.angle))))
+        new_direction_x = round(self.direction[0] - math.sin(math.radians(self.angle)))
+        new_direction_y = round(self.direction[1] - math.cos(math.radians(self.angle)))
+        if new_direction_x <= 10 and new_direction_x >= -10:
+            self.direction = (new_direction_x, self.direction[1])
+        if new_direction_y <= 10 and new_direction_y >= -10:
+            self.direction = (self.direction[0], new_direction_y)
+        print(self.direction)
 
 class Game(object):
     def __init__(self):
