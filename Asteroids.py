@@ -1,3 +1,4 @@
+from turtle import width
 import pygame
 from pygame.constants import (QUIT, K_LEFT, K_RIGHT, K_UP, K_ESCAPE, KEYDOWN)
 import os
@@ -40,6 +41,7 @@ class Spaceship(pygame.sprite.Sprite):
 
     def update(self,) -> None:
         self.rect.move_ip(self.direction)
+        self.warp_to_other_side()
 
     def rotate_left(self):
         self.angle += 22.5
@@ -63,6 +65,16 @@ class Spaceship(pygame.sprite.Sprite):
         if new_direction_y <= 10 and new_direction_y >= -10:
             self.direction = (self.direction[0], new_direction_y)
         print(self.direction)
+
+    def warp_to_other_side(self):
+        if self.rect.right <= 0:
+            self.rect.left = Settings.window["width"]
+        elif self.rect.left >= Settings.window["width"]:
+            self.rect.right = 0
+        if self.rect.bottom <= 0:
+            self.rect.top = Settings.window["height"]
+        elif self.rect.top >= Settings.window["height"]:
+            self.rect.bottom = 0
 
 class Game(object):
     def __init__(self):
