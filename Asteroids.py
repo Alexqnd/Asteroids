@@ -108,8 +108,18 @@ class Asteroid(pygame.sprite.Sprite):
         self.margin = 20
 
     def update(self,) -> None:
-        print(self.direction)
         self.rect.move_ip(self.direction)
+        self.warp_to_other_side()
+
+    def warp_to_other_side(self):
+        if self.rect.right <= 0:
+            self.rect.left = Settings.window["width"]
+        elif self.rect.left >= Settings.window["width"]:
+            self.rect.right = 0
+        if self.rect.bottom <= 0:
+            self.rect.top = Settings.window["height"]
+        elif self.rect.top >= Settings.window["height"]:
+            self.rect.bottom = 0
 
 class Game(object):
     def __init__(self):
