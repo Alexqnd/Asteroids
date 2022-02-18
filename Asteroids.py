@@ -63,7 +63,6 @@ class Spaceship(pygame.sprite.Sprite):
             self.direction = (new_direction_x, self.direction[1])
         if new_direction_y <= 10 and new_direction_y >= -10:
             self.direction = (self.direction[0], new_direction_y)
-        print(self.direction)
 
     def warp_to_other_side(self):
         if self.rect.right <= 0:
@@ -75,6 +74,18 @@ class Spaceship(pygame.sprite.Sprite):
         elif self.rect.top >= Settings.window["height"]:
             self.rect.bottom = 0
 
+class Asteroid(pygame.sprite.Sprite):
+    def __init__(self) -> None:
+        super().__init__()
+        self.width = 90
+        self.height = 80
+        self.image = pygame.image.load(Settings.imagepath("asteroid_big.png")).convert()
+        self.image = pygame.transform.scale(self.image, (self.width, self.height)).convert()
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = self.image.get_rect()
+        self.direction = (0, 0)
+        self.rect = (100, 200)
+
 class Game(object):
     def __init__(self):
         super().__init__()
@@ -84,6 +95,8 @@ class Game(object):
         pygame.display.set_caption(Settings.title)
         self.clock = pygame.time.Clock()
         self.spaceship = pygame.sprite.GroupSingle(Spaceship())
+        self.asteroids = pygame.sprite.Group()
+        self.asteroids.add(Asteroid())
         self.running = False
 
     def run(self) -> None:
@@ -115,6 +128,7 @@ class Game(object):
     def draw(self) -> None:
         self.screen.fill((0, 0, 50))
         self.spaceship.draw(self.screen)
+        self.asteroids.draw(self.screen)
         pygame.display.flip()
 
 if __name__ == '__main__':
