@@ -105,6 +105,7 @@ class Asteroid(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.direction = (0, 0)
         self.rect.center = (start_x, start_y)
+        self.margin = 20
 
 class Game(object):
     def __init__(self):
@@ -133,9 +134,16 @@ class Game(object):
 
     def spawn_asteroid(self) -> None:
         if len(self.asteroids) < self.max_asteroids:
-            new_asteroid = Asteroid(randint(0, Settings.window['width']), randint(0, Settings.window['height']))
-            if not pygame.sprite.spritecollideany(new_asteroid, self.spaceship, collided=pygame.sprite.collide_mask):
-                self.asteroids.add(new_asteroid)
+            for i in range(0, 100):
+                new_asteroid = Asteroid(randint(0, Settings.window['width']), randint(0, Settings.window['height']))
+                collision = pygame.sprite.spritecollideany(new_asteroid, self.spaceship, collided=pygame.sprite.collide_mask)
+                right_wall = new_asteroid.rect.right >= Settings.window['width'] - new_asteroid.margin
+                bottom_wall = new_asteroid.rect.bottom >= Settings.window['height'] - new_asteroid.margin
+                left_wall = new_asteroid.rect.left <= new_asteroid.margin
+                top_wall = new_asteroid.rect.top <= new_asteroid.margin
+                if not collision and not right_wall and not bottom_wall and not left_wall and not top_wall:
+                    self.asteroids.add(new_asteroid)
+                    break
 
 
     def watch_for_events(self) -> None:
