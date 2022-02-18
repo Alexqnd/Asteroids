@@ -1,5 +1,6 @@
 import pygame
 from pygame.constants import (QUIT, K_LEFT, K_RIGHT, K_UP, K_ESCAPE, KEYDOWN)
+from random import randint
 import os
 import math
 
@@ -75,7 +76,7 @@ class Spaceship(pygame.sprite.Sprite):
             self.rect.bottom = 0
 
 class Asteroid(pygame.sprite.Sprite):
-    def __init__(self) -> None:
+    def __init__(self, start_x, start_y) -> None:
         super().__init__()
         self.width = 90
         self.height = 80
@@ -84,7 +85,7 @@ class Asteroid(pygame.sprite.Sprite):
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
         self.direction = (0, 0)
-        self.rect = (100, 200)
+        self.rect = (start_x, start_y)
 
 class Game(object):
     def __init__(self):
@@ -96,11 +97,12 @@ class Game(object):
         self.clock = pygame.time.Clock()
         self.spaceship = pygame.sprite.GroupSingle(Spaceship())
         self.asteroids = pygame.sprite.Group()
-        self.asteroids.add(Asteroid())
         self.running = False
 
     def run(self) -> None:
         self.running = True
+        for i in range(0, 5):
+            self.asteroids.add(Asteroid(randint(0, Settings.window['width']), randint(0, Settings.window['height'])))
         while self.running:
             self.clock.tick(Settings.fps)
             self.update()
