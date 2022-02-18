@@ -24,6 +24,25 @@ class Settings(object):
     def imagepath(name):
         return os.path.join(Settings.path['image'], name)
 
+class Timer(object):
+    def __init__(self, duration, with_start = True):
+        self.duration = duration
+        if with_start:
+            self.next = pygame.time.get_ticks()
+        else:
+            self.next = pygame.time.get_ticks() + self.duration
+
+    def is_next_stop_reached(self):
+        if pygame.time.get_ticks() > self.next:
+            self.next = pygame.time.get_ticks() + self.duration
+            return True
+        return False
+
+    def change_duration(self, delta=10):
+        self.duration += delta
+        if self.duration < 0:
+            self.duration = 0
+
 class Spaceship(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
@@ -97,18 +116,25 @@ class Game(object):
         self.clock = pygame.time.Clock()
         self.spaceship = pygame.sprite.GroupSingle(Spaceship())
         self.asteroids = pygame.sprite.Group()
+        self.max_asteroids = 5
+        self.asteroids_spawntimer = Timer(3000, True)
         self.running = False
 
     def run(self) -> None:
         self.running = True
-        for i in range(0, 5):
-            self.asteroids.add(Asteroid(randint(0, Settings.window['width']), randint(0, Settings.window['height'])))
         while self.running:
+            if self.asteroids_spawntimer.is_next_stop_reached():
+                self.spawn_asteroid()
             self.clock.tick(Settings.fps)
             self.update()
             self.watch_for_events()
             self.draw()
         pygame.quit()
+
+    def spawn_asteroid(self) -> None:
+        if len(self.asteroids) < self.max_asteroids:
+            self.asteroids.add(Asteroid(randint(0, Settings.window['width']), randint(0, Settings.window['height'])))
+
 
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
