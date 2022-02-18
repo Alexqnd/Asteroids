@@ -95,7 +95,7 @@ class Spaceship(pygame.sprite.Sprite):
             self.rect.bottom = 0
 
 class Asteroid(pygame.sprite.Sprite):
-    def __init__(self, start_x, start_y) -> None:
+    def __init__(self, start_x, start_y, speed_h, speed_v) -> None:
         super().__init__()
         self.width = 90
         self.height = 80
@@ -103,9 +103,13 @@ class Asteroid(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (self.width, self.height)).convert()
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
-        self.direction = (0, 0)
         self.rect.center = (start_x, start_y)
+        self.direction = (speed_h, speed_v)
         self.margin = 20
+
+    def update(self,) -> None:
+        print(self.direction)
+        self.rect.move_ip(self.direction)
 
 class Game(object):
     def __init__(self):
@@ -135,7 +139,11 @@ class Game(object):
     def spawn_asteroid(self) -> None:
         if len(self.asteroids) < self.max_asteroids:
             for i in range(0, 100):
-                new_asteroid = Asteroid(randint(0, Settings.window['width']), randint(0, Settings.window['height']))
+                rand_x = randint(0, Settings.window['width'])
+                rand_y = randint(0, Settings.window['height'])
+                rand_speed_h = randint(0, 4)
+                rand_speed_v = randint(0, 4)
+                new_asteroid = Asteroid(rand_x, rand_y, rand_speed_h, rand_speed_v)
                 collision = pygame.sprite.spritecollideany(new_asteroid, self.spaceship, collided=pygame.sprite.collide_mask)
                 right_wall = new_asteroid.rect.right >= Settings.window['width'] - new_asteroid.margin
                 bottom_wall = new_asteroid.rect.bottom >= Settings.window['height'] - new_asteroid.margin
@@ -162,6 +170,7 @@ class Game(object):
 
     def update(self) -> None:
         self.spaceship.sprite.update()
+        self.asteroids.update()
 
     def draw(self) -> None:
         self.screen.fill((0, 0, 50))
