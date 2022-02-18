@@ -125,8 +125,20 @@ class Asteroid_normal(Asteroid):
     def __init__(self, start_x, start_y, speed_h, speed_v) -> None:
         super().__init__(start_x, start_y, speed_h, speed_v)
         self.width = 60
-        self.height = 40
+        self.height = 60
         self.image = pygame.image.load(Settings.imagepath("asteroid_normal.png")).convert()
+        self.image = pygame.transform.scale(self.image, (self.width, self.height)).convert()
+        self.image = pygame.transform.scale(self.image, (self.width, self.height)).convert()
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = self.image.get_rect()
+        self.rect.center = (start_x, start_y)
+
+class Asteroid_small(Asteroid):
+    def __init__(self, start_x, start_y, speed_h, speed_v) -> None:
+        super().__init__(start_x, start_y, speed_h, speed_v)
+        self.width = 30
+        self.height = 30
+        self.image = pygame.image.load(Settings.imagepath("asteroid_small.png")).convert()
         self.image = pygame.transform.scale(self.image, (self.width, self.height)).convert()
         self.image = pygame.transform.scale(self.image, (self.width, self.height)).convert()
         self.image.set_colorkey((0, 0, 0))
@@ -163,10 +175,10 @@ class Game(object):
             for i in range(0, 100):
                 rand_x = randint(0, Settings.window['width'])
                 rand_y = randint(0, Settings.window['height'])
-                rand_speed_h = randint(0, 3)
-                rand_speed_v = randint(0, 3)
-                asteroid_types = [Asteroid_normal(rand_x, rand_y, rand_speed_h, rand_speed_v), Asteroid(rand_x, rand_y, rand_speed_h, rand_speed_v)]
-                new_asteroid = asteroid_types[randint(0, 1)]
+                rand_speed_h = randint(0, 2)
+                rand_speed_v = randint(0, 2)
+                asteroid_types = [Asteroid(rand_x, rand_y, rand_speed_h, rand_speed_v), Asteroid_normal(rand_x, rand_y, rand_speed_h, rand_speed_v), Asteroid_small(rand_x, rand_y, rand_speed_h, rand_speed_v)]
+                new_asteroid = asteroid_types[randint(0, 2)]
                 collision = pygame.sprite.spritecollideany(new_asteroid, self.spaceship, collided=pygame.sprite.collide_mask)
                 right_wall = new_asteroid.rect.right >= Settings.window['width'] - new_asteroid.margin
                 bottom_wall = new_asteroid.rect.bottom >= Settings.window['height'] - new_asteroid.margin
