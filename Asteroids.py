@@ -104,7 +104,7 @@ class Asteroid(pygame.sprite.Sprite):
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
         self.direction = (0, 0)
-        self.rect = (start_x, start_y)
+        self.rect.center = (start_x, start_y)
 
 class Game(object):
     def __init__(self):
@@ -133,7 +133,9 @@ class Game(object):
 
     def spawn_asteroid(self) -> None:
         if len(self.asteroids) < self.max_asteroids:
-            self.asteroids.add(Asteroid(randint(0, Settings.window['width']), randint(0, Settings.window['height'])))
+            new_asteroid = Asteroid(randint(0, Settings.window['width']), randint(0, Settings.window['height']))
+            if not pygame.sprite.spritecollideany(new_asteroid, self.spaceship, collided=pygame.sprite.collide_mask):
+                self.asteroids.add(new_asteroid)
 
 
     def watch_for_events(self) -> None:
