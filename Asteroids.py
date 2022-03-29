@@ -112,9 +112,13 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2)
         self.direction = (0, 0)
+        self.timer = Timer(5000, False)
 
     def update(self) -> None:
         self.rect.move_ip(self.direction)
+        if self.timer.is_next_stop_reached():
+            self.kill()
+
 
 class Asteroid(pygame.sprite.Sprite):
     def __init__(self, start_x, start_y, speed_h, speed_v) -> None:
