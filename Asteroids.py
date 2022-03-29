@@ -194,9 +194,10 @@ class Game(object):
         pygame.quit()
 
     def shoot(self) -> None:
-        bullet = Bullet()
-        self.spaceship.sprite.shoot(bullet)
-        self.bullets.add(bullet)
+        if len(self.bullets) < 10:
+            bullet = Bullet()
+            self.spaceship.sprite.shoot(bullet)
+            self.bullets.add(bullet)
 
     def spawn_asteroid(self) -> None:
         if len(self.asteroids) < self.max_asteroids:
