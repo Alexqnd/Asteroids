@@ -1,5 +1,5 @@
 import pygame
-from pygame.constants import (QUIT, K_LEFT, K_RIGHT, K_UP, K_ESCAPE, KEYDOWN)
+from pygame.constants import (QUIT, K_LEFT, K_RIGHT, K_UP, K_ESCAPE, K_SPACE, K_RETURN, KEYDOWN)
 from random import randint
 import os
 import math
@@ -94,6 +94,21 @@ class Spaceship(pygame.sprite.Sprite):
         elif self.rect.top >= Settings.window["height"]:
             self.rect.bottom = 0
 
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self) -> None:
+        super().__init__()
+        self.width = 20
+        self.height = 5
+        self.image = pygame.image.load(Settings.imagepath("bullet.png")).convert()
+        self.image = pygame.transform.scale(self.image, (self.width, self.height)).convert()
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = self.image.get_rect()
+        self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2)
+        self.direction = (0, 0)
+
+    def update(self) -> None:
+        self.rect.move_ip(self.direction)
+
 class Asteroid(pygame.sprite.Sprite):
     def __init__(self, start_x, start_y, speed_h, speed_v) -> None:
         super().__init__()
@@ -154,6 +169,8 @@ class Game(object):
         pygame.display.set_caption(Settings.title)
         self.clock = pygame.time.Clock()
         self.spaceship = pygame.sprite.GroupSingle(Spaceship())
+        self.bullets = pygame.sprite.Group()
+        self.bullets.add(Bullet())
         self.asteroids = pygame.sprite.Group()
         self.max_asteroids = 5
         self.asteroids_spawntimer = Timer(3000, True)
@@ -188,7 +205,6 @@ class Game(object):
                     self.asteroids.add(new_asteroid)
                     break
 
-
     def watch_for_events(self) -> None:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -210,6 +226,7 @@ class Game(object):
     def draw(self) -> None:
         self.screen.fill((0, 0, 50))
         self.spaceship.draw(self.screen)
+        self.bullets.draw(self.screen)
         self.asteroids.draw(self.screen)
         pygame.display.flip()
 
