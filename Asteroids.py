@@ -96,8 +96,8 @@ class Spaceship(pygame.sprite.Sprite):
             self.rect.bottom = 0
 
     def shoot(self, bullet) -> None:
-        direction_x = - self.shoot_force * math.sin(math.radians(self.angle))
-        direction_y = - self.shoot_force * math.cos(math.radians(self.angle))
+        direction_x = - self.shoot_force * math.sin(math.radians(self.angle)) + self.direction[0]
+        direction_y = - self.shoot_force * math.cos(math.radians(self.angle)) + self.direction[1]
         bullet.direction = (direction_x, direction_y) 
         bullet.rect.center = (self.rect.center[0], self.rect.center[1])
 
