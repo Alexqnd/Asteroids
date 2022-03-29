@@ -57,6 +57,7 @@ class Spaceship(pygame.sprite.Sprite):
         self.rect.center = (Settings.window['width'] // 2, Settings.window['height'] // 2)
         self.center_original = self.rect.center
         self.direction = (0, 0)
+        self.shoot_force = 3
 
     def update(self,) -> None:
         self.rect.move_ip(self.direction)
@@ -93,6 +94,12 @@ class Spaceship(pygame.sprite.Sprite):
             self.rect.top = Settings.window["height"]
         elif self.rect.top >= Settings.window["height"]:
             self.rect.bottom = 0
+
+    def shoot(self, bullet) -> None:
+        direction_x = - self.shoot_force * math.sin(math.radians(self.angle))
+        direction_y = - self.shoot_force * math.cos(math.radians(self.angle))
+        bullet.direction = (direction_x, direction_y) 
+        bullet.rect.center = (self.rect.center[0], self.rect.center[1])
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self) -> None:
@@ -187,7 +194,9 @@ class Game(object):
         pygame.quit()
 
     def shoot(self) -> None:
-        self.bullets.add(Bullet())
+        bullet = Bullet()
+        self.spaceship.sprite.shoot(bullet)
+        self.bullets.add(bullet)
 
     def spawn_asteroid(self) -> None:
         if len(self.asteroids) < self.max_asteroids:
@@ -225,6 +234,7 @@ class Game(object):
 
     def update(self) -> None:
         self.spaceship.sprite.update()
+        self.bullets.update()
         self.asteroids.update()
 
     def draw(self) -> None:
