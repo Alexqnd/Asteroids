@@ -170,7 +170,6 @@ class Game(object):
         self.clock = pygame.time.Clock()
         self.spaceship = pygame.sprite.GroupSingle(Spaceship())
         self.bullets = pygame.sprite.Group()
-        self.bullets.add(Bullet())
         self.asteroids = pygame.sprite.Group()
         self.max_asteroids = 5
         self.asteroids_spawntimer = Timer(3000, True)
@@ -186,6 +185,9 @@ class Game(object):
             self.watch_for_events()
             self.draw()
         pygame.quit()
+
+    def shoot(self) -> None:
+        self.bullets.add(Bullet())
 
     def spawn_asteroid(self) -> None:
         if len(self.asteroids) < self.max_asteroids:
@@ -218,6 +220,8 @@ class Game(object):
                     self.spaceship.sprite.rotate_right()
                 elif event.key == K_UP:
                     self.spaceship.sprite.accelerate()
+                elif event.key == K_RETURN or event.key == K_SPACE:
+                    self.shoot()
 
     def update(self) -> None:
         self.spaceship.sprite.update()
