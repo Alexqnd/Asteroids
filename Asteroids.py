@@ -193,7 +193,8 @@ class Game(object):
         self.background_image = pygame.transform.scale(self.background_image, (Settings.window["width"], Settings.window["height"])).convert()
         self.max_asteroids = 5
         self.asteroids_spawntimer = Timer(3000, True)
-        #self.bullets.clear(self.screen, self.background_image)
+        self.bullets.clear(self.screen, self.background_image)
+        self.asteroids.clear(self.screen, self.asteroids)
         self.running = False
     
 
@@ -254,11 +255,11 @@ class Game(object):
         self.asteroids.update()
 
     def draw(self) -> None:
-        self.screen.blit(self.background_image, (0, 0))
         self.spaceship.draw(self.screen)
-        self.bullets.draw(self.screen)
-        self.asteroids.draw(self.screen)
-        pygame.display.flip()
+        bullets = self.bullets.draw(self.screen)
+        asteroids = self.asteroids.draw(self.screen)
+        pygame.display.update(bullets)
+        pygame.display.update(asteroids)
 
 if __name__ == '__main__':
     game = Game()
