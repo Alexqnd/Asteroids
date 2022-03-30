@@ -43,7 +43,7 @@ class Timer(object):
         if self.duration < 0:
             self.duration = 0
 
-class Spaceship(pygame.sprite.Sprite):
+class Spaceship(pygame.sprite.DirtySprite):
     def __init__(self) -> None:
         super().__init__()
         self.width = 60
@@ -98,10 +98,10 @@ class Spaceship(pygame.sprite.Sprite):
     def shoot(self, bullet) -> None:
         direction_x = - self.shoot_force * math.sin(math.radians(self.angle)) + self.direction[0]
         direction_y = - self.shoot_force * math.cos(math.radians(self.angle)) + self.direction[1]
-        bullet.direction = (direction_x, direction_y) 
+        bullet.direction = (direction_x, direction_y)
         bullet.rect.center = (self.rect.center[0], self.rect.center[1])
 
-class Bullet(pygame.sprite.Sprite):
+class Bullet(pygame.sprite.DirtySprite):
     def __init__(self) -> None:
         super().__init__()
         self.width = 20
@@ -120,7 +120,7 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
 
 
-class Asteroid(pygame.sprite.Sprite):
+class Asteroid(pygame.sprite.DirtySprite):
     def __init__(self, start_x, start_y, speed_h, speed_v) -> None:
         super().__init__()
         self.width = 90
