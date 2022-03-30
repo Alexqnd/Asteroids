@@ -189,6 +189,8 @@ class Game(object):
         self.spaceship = pygame.sprite.GroupSingle(Spaceship())
         self.bullets = pygame.sprite.LayeredDirty()
         self.asteroids = pygame.sprite.LayeredDirty()
+        self.background_image = pygame.image.load(Settings.imagepath("background.png")).convert()
+        self.background_image = pygame.transform.scale(self.background_image, (Settings.window["width"], Settings.window["height"])).convert()
         self.max_asteroids = 5
         self.asteroids_spawntimer = Timer(3000, True)
         #self.bullets.clear(self.screen, self.background_image)
@@ -252,7 +254,7 @@ class Game(object):
         self.asteroids.update()
 
     def draw(self) -> None:
-        self.screen.fill((0, 0, 50))
+        self.screen.blit(self.background_image, (0, 0))
         self.spaceship.draw(self.screen)
         self.bullets.draw(self.screen)
         self.asteroids.draw(self.screen)
