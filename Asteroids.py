@@ -58,10 +58,12 @@ class Spaceship(pygame.sprite.DirtySprite):
         self.center_original = self.rect.center
         self.direction = (0, 0)
         self.shoot_force = 3
+        self.dirty = 1
 
     def update(self,) -> None:
-        self.rect.move_ip(self.direction)
-        self.warp_to_other_side()
+        if self.direction[0] != 0 or self.direction[1] != 0:
+            self.rect.move_ip(self.direction)
+            self.warp_to_other_side()
 
     def rotate_left(self):
         self.angle += 22.5
@@ -69,6 +71,7 @@ class Spaceship(pygame.sprite.DirtySprite):
             self.angle -= 360
         self.image = pygame.transform.rotate(self.image_template, self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
+        self.dirty = 1
     
     def rotate_right(self):
         self.angle -= 22.5
@@ -76,6 +79,7 @@ class Spaceship(pygame.sprite.DirtySprite):
             self.angle += 360
         self.image = pygame.transform.rotate(self.image_template, self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
+        self.dirty = 1
 
     def accelerate(self):
         new_direction_x = self.direction[0] - math.sin(math.radians(self.angle))
@@ -115,7 +119,9 @@ class Bullet(pygame.sprite.DirtySprite):
         self.timer = Timer(5000, False)
 
     def update(self) -> None:
-        self.rect.move_ip(self.direction)
+        if self.direction[0] != 0 or self.direction[1] != 0:
+            self.rect.move_ip(self.direction)
+            self.dirty = 1
         if self.timer.is_next_stop_reached():
             self.kill()
 
@@ -134,8 +140,9 @@ class Asteroid(pygame.sprite.DirtySprite):
         self.margin = 20
 
     def update(self,) -> None:
-        self.rect.move_ip(self.direction)
-        self.warp_to_other_side()
+        if self.direction[0] != 0 or self.direction[1] != 0:
+            self.rect.move_ip(self.direction)
+            self.warp_to_other_side()
 
     def warp_to_other_side(self):
         if self.rect.right <= 0:
