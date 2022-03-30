@@ -187,11 +187,13 @@ class Game(object):
         pygame.display.set_caption(Settings.title)
         self.clock = pygame.time.Clock()
         self.spaceship = pygame.sprite.GroupSingle(Spaceship())
-        self.bullets = pygame.sprite.Group()
-        self.asteroids = pygame.sprite.Group()
+        self.bullets = pygame.sprite.LayeredDirty()
+        self.asteroids = pygame.sprite.LayeredDirty()
         self.max_asteroids = 5
         self.asteroids_spawntimer = Timer(3000, True)
+        #self.bullets.clear(self.screen, self.background_image)
         self.running = False
+    
 
     def run(self) -> None:
         self.running = True
